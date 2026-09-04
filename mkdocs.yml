@@ -356,6 +356,14 @@ nav:
               - Vue: runtime/frontend/ag-ui/vue.md
               - React Native: runtime/frontend/ag-ui/react-native.md
               - Slack: runtime/frontend/ag-ui/slack.md
+          - A2UI: runtime/frontend/a2ui.md
+          - Patterns:
+              - Generative UI:
+                  - Controlled: runtime/frontend/patterns/generative-ui/controlled-generative-ui.md
+                  - Declarative (A2UI): runtime/frontend/patterns/generative-ui/a2ui.md
+                  - Open: runtime/frontend/patterns/generative-ui/open-generative-ui.md
+                  - MCP Apps: runtime/frontend/patterns/generative-ui/mcp-apps.md
+                  - Tool Rendering: runtime/frontend/patterns/generative-ui/tool-rendering.md
       - Ambient Agents: runtime/ambient-agents.md
       - Resume Agents: runtime/resume.md
       - Cancel Agent Runs: runtime/cancel.md
