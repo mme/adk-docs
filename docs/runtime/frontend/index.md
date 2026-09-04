@@ -63,8 +63,9 @@ Client guides: [React](ag-ui/react.md), [Angular](ag-ui/angular.md),
 1. Build and debug the agent in [ADK Web](../web-interface/index.md).
 2. Add the [AG-UI endpoint](ag-ui/index.md) with `ag-ui-adk`.
 3. Connect the client for the surface you are building.
-4. Add generative UI or interaction patterns only when the user experience
-   needs them.
+4. Add [A2UI](a2ui.md) or a
+   [generative UI pattern](patterns/generative-ui/controlled-generative-ui.md)
+   only when the user experience needs it.
 
 Keep credentials, session lookup, authorization, and tool execution policy on
 the backend side of the AG-UI boundary. Keep rendering, local interaction

@@ -60,7 +60,7 @@ from ag_ui_adk import AGUIToolset
 
 root_agent = Agent(
     name="ui_assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "When the user asks for an exploratory dashboard, interactive report, "
         "or one-off interface, call generateSandboxedUi. Use normal text for "

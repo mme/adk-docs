@@ -9,9 +9,11 @@ string that describes a card, table, form, or dashboard, the agent returns UI
 operations that reference a component catalog. A renderer uses that catalog to
 turn the operations into real application UI.
 
-In the ADK frontend path, A2UI commonly travels over AG-UI and CopilotKit
-renders the resulting surface. The protocol boundary is still A2UI: catalog,
-surface, component tree, data model, and user actions.
+The [A2UI integration](/integrations/a2ui/) page covers the A2UI agent SDK for
+agents that emit A2UI directly, for example over A2A. This page covers A2UI over
+AG-UI: the `ag-ui-adk` adapter carries the operations in the AG-UI stream and an
+A2UI renderer in the frontend draws the surface. The protocol boundary is still
+A2UI: catalog, surface, component tree, data model, and user actions.
 
 Use this page when the agent should render structured UI. If you only need chat,
 start with [AG-UI](ag-ui/index.md) and a client page first.
@@ -43,13 +45,12 @@ An A2UI response is data. A small response can look like this:
       "updateComponents": {
         "surfaceId": "sales-dashboard",
         "components": [
+          { "id": "root", "component": "Column", "children": ["revenue"] },
           {
             "id": "revenue",
-            "type": "MetricCard",
-            "props": {
-              "title": { "path": "/title" },
-              "value": { "path": "/value" }
-            }
+            "component": "MetricCard",
+            "title": { "path": "/title" },
+            "value": { "path": "/value" }
           }
         ]
       }
@@ -59,10 +60,7 @@ An A2UI response is data. A small response can look like this:
       "updateDataModel": {
         "surfaceId": "sales-dashboard",
         "path": "/",
-        "data": {
-          "title": "Revenue",
-          "value": "$124K"
-        }
+        "value": { "title": "Revenue", "value": "$124K" }
       }
     }
   ]
@@ -84,29 +82,50 @@ matching components.
 Keep business data, credentials, and storage policy in ADK tools or backend
 services. Keep component rendering and browser interaction in the frontend.
 
-## Using A2UI with AGUI
+## Using A2UI over AG-UI
 
-CopilotKit manages the renderer and AG-UI activity stream for ADK. You provide
-the catalog on the client and configure the ADK AG-UI wrapper for dynamic A2UI.
+The example below uses CopilotKit, which ships an A2UI renderer and forwards the
+catalog with each run. You provide the catalog on the client and configure the
+ADK AG-UI wrapper for dynamic A2UI.
 
-Install the renderer package alongside the React client:
+Install the renderer package alongside the React client. The renderer's catalog
+types are built on Zod 3, so pin that major version:
 
 ```shell
-npm install @copilotkit/react-core @copilotkit/a2ui-renderer
+npm install @copilotkit/react-core @copilotkit/a2ui-renderer zod@3
 ```
 
-Create a catalog with the components your app can render:
+Create a catalog with the components your app can render. Each entry pairs a
+Zod schema with a description the agent reads, and `includeBasicCatalog` adds
+the built-in layout components such as `Column`:
 
-```ts title="a2ui-catalog.ts"
-import { Catalog } from "@copilotkit/a2ui-renderer";
-import type { ReactComponentImplementation } from "@copilotkit/a2ui-renderer";
+```tsx title="a2ui-catalog.tsx"
+import { createCatalog, type RendererProps } from "@copilotkit/a2ui-renderer";
+import { z } from "zod";
 
-import { RevenueCard, SalesTable } from "./a2ui-renderers";
+const definitions = {
+  MetricCard: {
+    description: "A single KPI with a title and a formatted value.",
+    props: z.object({ title: z.string(), value: z.string() }),
+  },
+};
 
-export const salesCatalog = new Catalog<ReactComponentImplementation>(
-  "https://example.com/catalogs/sales.json",
-  [RevenueCard, SalesTable],
-  [],
+function MetricCard({ props }: RendererProps<{ title: string; value: string }>) {
+  return (
+    <article>
+      <h3>{props.title}</h3>
+      <strong>{props.value}</strong>
+    </article>
+  );
+}
+
+export const salesCatalog = createCatalog(
+  definitions,
+  { MetricCard },
+  {
+    catalogId: "https://example.com/catalogs/sales.json",
+    includeBasicCatalog: true,
+  },
 );
 ```
 
@@ -141,7 +160,7 @@ from ag_ui_adk import ADKAgent
 
 root_agent = Agent(
     name="a2ui_assistant",
-    model="gemini-2.5-pro",
+    model="gemini-pro-latest",
     instruction=(
         "When visual UI helps, create an A2UI surface using the available "
         "catalog. Do not repeat the rendered data as plain text."
@@ -157,7 +176,7 @@ ag_ui_agent = ADKAgent(
     a2ui={
         "default_catalog_id": "https://example.com/catalogs/sales.json",
         "guidelines": {
-            "composition_guide": "Use RevenueCard for KPIs and SalesTable for row data.",
+            "composition_guide": "Use MetricCard for KPIs.",
         },
     },
 )

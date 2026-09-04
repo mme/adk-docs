@@ -62,7 +62,7 @@ running and available at `MCP_SERVER_URL`.
 
 ## Let the ADK agent use it
 
-`AGUIToolset()` exposes the MCP app tool forwarded by CopilotKit Runtime to the
+The `AGUIToolset()` toolset exposes the MCP app tool forwarded by CopilotKit Runtime to the
 ADK agent. Use the tool name defined by your MCP app server.
 
 ```python title="app.py"
@@ -71,7 +71,7 @@ from ag_ui_adk import AGUIToolset
 
 root_agent = Agent(
     name="orders_assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "When the user asks to inspect an order, call show_order_status with "
         "the order id so the MCP app can render the interactive UI."

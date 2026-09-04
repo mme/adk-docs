@@ -24,7 +24,7 @@ def search_docs(query: str) -> str:
 
 root_agent = Agent(
     name="docs_assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "When the user asks a documentation question, call search_docs and "
         "summarize the result."

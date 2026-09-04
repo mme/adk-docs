@@ -117,3 +117,7 @@ export function SearchTool() {
   return null;
 }
 ```
+
+For richer UI, continue with [Controlled](../patterns/generative-ui/controlled-generative-ui.md),
+[Declarative (A2UI)](../patterns/generative-ui/a2ui.md), or
+[Tool Rendering](../patterns/generative-ui/tool-rendering.md).

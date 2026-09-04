@@ -12,7 +12,7 @@ Start from the [AG-UI setup](../../ag-ui/index.md) and the [React client](../../
 
 ## Register a render-only component
 
-`useComponent` registers a component the agent can call only to render UI. It
+The `useComponent` hook registers a component the agent can call only to render UI. It
 does not run a backend handler.
 
 ```tsx title="RevenueCardComponent.tsx"
@@ -77,7 +77,7 @@ export default function Page() {
 
 ## Agent instruction
 
-Tell the ADK agent when to use the component. `AGUIToolset()` from the AG-UI
+Tell the ADK agent when to use the component. The `AGUIToolset()` toolset from the AG-UI
 setup exposes registered client tools and components to the agent.
 
 ```python title="app.py"
@@ -86,7 +86,7 @@ from ag_ui_adk import AGUIToolset
 
 root_agent = Agent(
     name="assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "When the user asks for a KPI or dashboard summary, use the "
         "revenueCard tool instead of returning the card as plain text."

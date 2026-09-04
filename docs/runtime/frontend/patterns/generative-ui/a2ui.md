@@ -16,16 +16,33 @@ Create a small catalog module with the component implementations your app can
 render. The catalog id is the stable name the agent and renderer use for the
 same component set.
 
-```ts title="a2ui-catalog.ts"
-import { Catalog } from "@copilotkit/a2ui-renderer";
-import type { ReactComponentImplementation } from "@copilotkit/a2ui-renderer";
+```tsx title="a2ui-catalog.tsx"
+import { createCatalog, type RendererProps } from "@copilotkit/a2ui-renderer";
+import { z } from "zod";
 
-import { MetricCard, SalesTable } from "./a2ui-renderers";
+const definitions = {
+  MetricCard: {
+    description: "A single KPI with a title and a formatted value.",
+    props: z.object({ title: z.string(), value: z.string() }),
+  },
+};
 
-export const salesCatalog = new Catalog<ReactComponentImplementation>(
-  "https://example.com/catalogs/sales.json",
-  [MetricCard, SalesTable],
-  [],
+function MetricCard({ props }: RendererProps<{ title: string; value: string }>) {
+  return (
+    <article>
+      <h3>{props.title}</h3>
+      <strong>{props.value}</strong>
+    </article>
+  );
+}
+
+export const salesCatalog = createCatalog(
+  definitions,
+  { MetricCard },
+  {
+    catalogId: "https://example.com/catalogs/sales.json",
+    includeBasicCatalog: true,
+  },
 );
 ```
 
@@ -67,7 +84,7 @@ from ag_ui_adk import ADKAgent
 
 root_agent = Agent(
     name="a2ui_assistant",
-    model="gemini-2.5-pro",
+    model="gemini-pro-latest",
     instruction=(
         "When a visual answer is useful, create an A2UI surface from the "
         "available catalog. Keep the text response brief."
@@ -83,7 +100,7 @@ ag_ui_agent = ADKAgent(
     a2ui={
         "default_catalog_id": "https://example.com/catalogs/sales.json",
         "guidelines": {
-            "composition_guide": "Use KPI cards for metrics and tables for row data.",
+            "composition_guide": "Use MetricCard for KPIs.",
         },
     },
 )
