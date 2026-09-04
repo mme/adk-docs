@@ -65,7 +65,7 @@ export default function Page() {
 
 ## Expose the action to ADK
 
-`AGUIToolset()` exposes CopilotKit frontend tools to the ADK agent.
+The `AGUIToolset()` toolset exposes CopilotKit frontend tools to the ADK agent.
 
 ```python title="app.py"
 from google.adk.agents import Agent
@@ -73,7 +73,7 @@ from ag_ui_adk import AGUIToolset
 
 root_agent = Agent(
     name="crm_assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "When the user asks to inspect a customer, call openCustomer with the "
         "customer id. Do not claim the customer is open until the tool returns."

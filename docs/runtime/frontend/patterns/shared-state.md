@@ -102,26 +102,43 @@ export default function Page() {
 
 ## Let the ADK agent use it
 
-`AGUIToolset()` exposes the registered frontend tool to the ADK agent. Keep the
-tool name in the instruction exactly the same as the frontend registration.
+The middleware does not add shared context to the model prompt on its own. It
+stores the context items in session state under `CONTEXT_STATE_KEY`, so read
+them from a callable instruction provider, as below, or from a tool. The
+`AGUIToolset()` toolset exposes the registered frontend tool to the ADK agent.
+Keep the tool name in the instruction exactly the same as the frontend
+registration.
 
 ```python title="app.py"
 from fastapi import FastAPI
 from google.adk.agents import Agent
+from google.adk.agents.readonly_context import ReadonlyContext
 from google.adk.apps import App, ResumabilityConfig
 
-from ag_ui_adk import ADKAgent, AGUIToolset, add_adk_fastapi_endpoint
+from ag_ui_adk import (
+    ADKAgent,
+    AGUIToolset,
+    CONTEXT_STATE_KEY,
+    add_adk_fastapi_endpoint,
+)
+
+
+def instructions(ctx: ReadonlyContext) -> str:
+    text = (
+        "When the user asks to change the draft delivery date or notes, call "
+        "the updateOrderDraft frontend tool. Do not claim that an order is "
+        "saved or submitted unless a backend storage tool or API confirms it."
+        "\n\nCurrent shared context:"
+    )
+    for item in ctx.state.get(CONTEXT_STATE_KEY, []):
+        text += f"\n- {item['description']}: {item['value']}"
+    return text
 
 
 root_agent = Agent(
     name="assistant",
-    model="gemini-2.5-flash",
-    instruction=(
-        "Use the provided shared context to understand the current order draft. "
-        "When the user asks to change the draft delivery date or notes, call "
-        "the updateOrderDraft frontend tool. Do not claim that an order is "
-        "saved or submitted unless a backend storage tool or API confirms it."
-    ),
+    model="gemini-flash-latest",
+    instruction=instructions,
     tools=[AGUIToolset()],
 )
 

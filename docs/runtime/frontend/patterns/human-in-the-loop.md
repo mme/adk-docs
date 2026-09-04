@@ -12,8 +12,9 @@ Start from the [AG-UI setup](../ag-ui/index.md) and the [React client](../ag-ui/
 
 ## Register an approval tool
 
-`useHumanInTheLoop` registers a frontend tool that resolves only when your UI
-calls `respond(...)`.
+The `useHumanInTheLoop` hook registers a frontend tool that resolves only when
+your UI calls `respond(...)`. The render function receives the tool call status,
+so it can show a pending state, the approval controls, and the recorded answer.
 
 ```tsx title="ApprovalTool.tsx"
 "use client";
@@ -30,9 +31,13 @@ export function ApprovalTool() {
       amount: z.number(),
       reason: z.string(),
     }),
-    render: ({ status, args, respond }) => {
-      if (status !== "executing" || !respond) {
-        return <p>Waiting for approval...</p>;
+    render: ({ status, args, respond, result }) => {
+      if (status === "inProgress") {
+        return <p>Preparing approval request...</p>;
+      }
+
+      if (status === "complete") {
+        return <p>Response recorded: {result}</p>;
       }
 
       return (
@@ -72,7 +77,7 @@ export default function Page() {
 
 ## Let the ADK agent request approval
 
-`AGUIToolset()` exposes the frontend approval tool to the ADK agent. Keep the
+The `AGUIToolset()` toolset exposes the frontend approval tool to the ADK agent. Keep the
 tool name in the instruction exactly the same as the frontend registration.
 
 ```python title="app.py"
@@ -81,7 +86,7 @@ from ag_ui_adk import AGUIToolset
 
 root_agent = Agent(
     name="refund_assistant",
-    model="gemini-2.5-flash",
+    model="gemini-flash-latest",
     instruction=(
         "Before approving a refund, call approveRefund with the order id, "
         "amount, and reason. Continue only after the user responds."
