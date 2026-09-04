@@ -119,5 +119,6 @@ export function SearchTool() {
 ```
 
 For richer UI, continue with [Controlled](../patterns/generative-ui/controlled-generative-ui.md),
-[Declarative (A2UI)](../patterns/generative-ui/a2ui.md), or
-[Tool Rendering](../patterns/generative-ui/tool-rendering.md).
+[Declarative (A2UI)](../patterns/generative-ui/a2ui.md),
+[Tool Rendering](../patterns/generative-ui/tool-rendering.md), or
+[Human-in-the-loop](../patterns/human-in-the-loop.md).
