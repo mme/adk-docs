@@ -169,3 +169,13 @@ the complete list.
     The AG-UI client SDKs for TypeScript, Kotlin, Java, and Go wrap this
     request and parse the events for you. See the
     [Frontends overview](../index.md) for links.
+
+## Client guides
+
+The following guides connect a CopilotKit client to this endpoint:
+
+- [React](react.md)
+- [Angular](angular.md)
+- [Vue](vue.md)
+- [React Native](react-native.md)
+- [Slack](slack.md)
