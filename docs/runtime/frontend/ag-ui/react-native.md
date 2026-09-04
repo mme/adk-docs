@@ -4,6 +4,10 @@
   <span class="lst-supported">Mobile client</span>
 </div>
 
+This guide uses CopilotKit, one of the AG-UI clients listed in the
+[Frontends overview](../index.md). The backend setup on the [AG-UI](index.md)
+page is the same for every client.
+
 Use CopilotKit React Native when a native mobile app should connect to an ADK
 agent through AG-UI. The React Native package is headless: it provides the
 provider and hooks, and you build the UI with React Native components.
@@ -24,34 +28,9 @@ npm install @copilotkit/react-native
 Host CopilotKit Runtime from a reachable backend. A local emulator cannot use a
 relative `/api/copilotkit` URL unless your development proxy forwards it.
 
-```ts title="app/api/copilotkit/[[...slug]]/route.ts"
-import { HttpAgent } from "@ag-ui/client";
-import {
-  CopilotRuntime,
-  InMemoryAgentRunner,
-  createCopilotEndpoint,
-} from "@copilotkit/runtime/v2";
-import { handle } from "hono/vercel";
-
-const runtime = new CopilotRuntime({
-  agents: {
-    default: new HttpAgent({
-      url: process.env.ADK_AG_UI_URL ?? "http://localhost:8000/ag-ui",
-    }),
-  },
-  runner: new InMemoryAgentRunner(),
-});
-
-const app = createCopilotEndpoint({
-  runtime,
-  basePath: "/api/copilotkit",
-});
-
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
-```
+The CopilotKit Runtime route from the
+[AG-UI setup](index.md#connect-a-client) registers the ADK endpoint once and
+serves every CopilotKit client at `/api/copilotkit`.
 
 ## Add polyfills
 

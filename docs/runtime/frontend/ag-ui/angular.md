@@ -4,6 +4,10 @@
   <span class="lst-supported">AG-UI client</span>
 </div>
 
+This guide uses CopilotKit, one of the AG-UI clients listed in the
+[Frontends overview](../index.md). The backend setup on the [AG-UI](index.md)
+page is the same for every client.
+
 Use CopilotKit Angular when an Angular application should connect to an ADK
 agent through AG-UI. CopilotKit owns the runtime connection and AG-UI client
 behavior. Your Angular app talks to `/api/copilotkit`, not directly to the
@@ -18,41 +22,14 @@ package:
 npm install @copilotkit/angular
 ```
 
-The Angular package expects Angular, Angular CDK, and RxJS to be provided by
-your app.
+The Angular package declares peer dependencies on Angular and Angular CDK
+`^22.0.0` and RxJS `^7.8.0`, which your app provides.
 
 ## Runtime endpoint
 
-Expose the same CopilotKit Runtime route used by the React guide:
-
-```ts title="app/api/copilotkit/[[...slug]]/route.ts"
-import { HttpAgent } from "@ag-ui/client";
-import {
-  CopilotRuntime,
-  InMemoryAgentRunner,
-  createCopilotEndpoint,
-} from "@copilotkit/runtime/v2";
-import { handle } from "hono/vercel";
-
-const runtime = new CopilotRuntime({
-  agents: {
-    default: new HttpAgent({
-      url: process.env.ADK_AG_UI_URL ?? "http://localhost:8000/ag-ui",
-    }),
-  },
-  runner: new InMemoryAgentRunner(),
-});
-
-const app = createCopilotEndpoint({
-  runtime,
-  basePath: "/api/copilotkit",
-});
-
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
-```
+The CopilotKit Runtime route from the
+[AG-UI setup](index.md#connect-a-client) registers the ADK endpoint once and
+serves every CopilotKit client at `/api/copilotkit`.
 
 ## Provide CopilotKit
 

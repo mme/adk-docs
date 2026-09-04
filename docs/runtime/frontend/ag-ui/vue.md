@@ -4,6 +4,10 @@
   <span class="lst-supported">AG-UI client</span>
 </div>
 
+This guide uses CopilotKit, one of the AG-UI clients listed in the
+[Frontends overview](../index.md). The backend setup on the [AG-UI](index.md)
+page is the same for every client.
+
 Use CopilotKit Vue when a Vue 3 application should connect to an ADK agent
 through AG-UI. CopilotKit owns the runtime connection, streaming, and chat
 state. Your Vue app talks to `/api/copilotkit`.
@@ -19,36 +23,9 @@ npm install @copilotkit/vue @copilotkit/core
 
 ## Runtime endpoint
 
-Expose a CopilotKit Runtime route that registers the ADK AG-UI endpoint:
-
-```ts title="app/api/copilotkit/[[...slug]]/route.ts"
-import { HttpAgent } from "@ag-ui/client";
-import {
-  CopilotRuntime,
-  InMemoryAgentRunner,
-  createCopilotEndpoint,
-} from "@copilotkit/runtime/v2";
-import { handle } from "hono/vercel";
-
-const runtime = new CopilotRuntime({
-  agents: {
-    default: new HttpAgent({
-      url: process.env.ADK_AG_UI_URL ?? "http://localhost:8000/ag-ui",
-    }),
-  },
-  runner: new InMemoryAgentRunner(),
-});
-
-const app = createCopilotEndpoint({
-  runtime,
-  basePath: "/api/copilotkit",
-});
-
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
-```
+The CopilotKit Runtime route from the
+[AG-UI setup](index.md#connect-a-client) registers the ADK endpoint once and
+serves every CopilotKit client at `/api/copilotkit`.
 
 ## Add the Vue client
 

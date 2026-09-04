@@ -54,6 +54,10 @@ Any client that speaks AG-UI can drive an ADK agent:
 The client-side examples in this section use CopilotKit. The backend setup is
 the same for every client.
 
+Client guides: [React](ag-ui/react.md), [Angular](ag-ui/angular.md),
+[Vue](ag-ui/vue.md), [React Native](ag-ui/react-native.md), and
+[Slack](ag-ui/slack.md).
+
 ## Implementation path
 
 1. Build and debug the agent in [ADK Web](../web-interface/index.md).

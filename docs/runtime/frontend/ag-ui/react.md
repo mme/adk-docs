@@ -4,6 +4,10 @@
   <span class="lst-supported">AG-UI client</span>
 </div>
 
+This guide uses CopilotKit, one of the AG-UI clients listed in the
+[Frontends overview](../index.md). The backend setup on the [AG-UI](index.md)
+page is the same for every client.
+
 Use CopilotKit React when a browser UI should connect to an ADK agent through
 AG-UI. CopilotKit owns the client-side protocol handling, streaming messages,
 tool calls, state updates, and chat UI. Your React code talks to
@@ -20,37 +24,9 @@ npm install @copilotkit/react-core zod
 
 ## Runtime endpoint
 
-The React app needs a CopilotKit Runtime route that registers the ADK AG-UI
-endpoint:
-
-```ts title="app/api/copilotkit/[[...slug]]/route.ts"
-import { HttpAgent } from "@ag-ui/client";
-import {
-  CopilotRuntime,
-  InMemoryAgentRunner,
-  createCopilotEndpoint,
-} from "@copilotkit/runtime/v2";
-import { handle } from "hono/vercel";
-
-const runtime = new CopilotRuntime({
-  agents: {
-    default: new HttpAgent({
-      url: process.env.ADK_AG_UI_URL ?? "http://localhost:8000/ag-ui",
-    }),
-  },
-  runner: new InMemoryAgentRunner(),
-});
-
-const app = createCopilotEndpoint({
-  runtime,
-  basePath: "/api/copilotkit",
-});
-
-export const GET = handle(app);
-export const POST = handle(app);
-export const PATCH = handle(app);
-export const DELETE = handle(app);
-```
+The CopilotKit Runtime route from the
+[AG-UI setup](index.md#connect-a-client) registers the ADK endpoint once and
+serves every CopilotKit client at `/api/copilotkit`.
 
 ## Add the provider
 
@@ -109,13 +85,13 @@ export default function Page() {
 }
 ```
 
-`CopilotChat` manages message state, input state, streaming, tool calls,
+The `CopilotChat` component manages message state, input state, streaming, tool calls,
 attachments, and suggestions internally.
 
 ## Add browser tools
 
 Use `useFrontendTool` when the ADK agent should call a browser-side capability.
-`AGUIToolset()` on the ADK side exposes these tools to the agent.
+The `AGUIToolset()` toolset on the ADK side exposes these tools to the agent.
 
 ```tsx title="SearchTool.tsx"
 "use client";

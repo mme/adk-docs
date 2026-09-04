@@ -4,6 +4,10 @@
   <span class="lst-supported">Messaging platform</span>
 </div>
 
+This guide uses CopilotKit, one of the AG-UI clients listed in the
+[Frontends overview](../index.md). The backend setup on the [AG-UI](index.md)
+page is the same for every client.
+
 Use CopilotKit Slack when Slack conversations should connect to an ADK agent
 through AG-UI. Slack is not a browser chat surface: the Slack adapter owns
 Socket Mode, message formatting, Block Kit rendering, interactions, and thread
