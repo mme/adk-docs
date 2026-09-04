@@ -364,6 +364,9 @@ nav:
                   - Open: runtime/frontend/patterns/generative-ui/open-generative-ui.md
                   - MCP Apps: runtime/frontend/patterns/generative-ui/mcp-apps.md
                   - Tool Rendering: runtime/frontend/patterns/generative-ui/tool-rendering.md
+              - Shared State: runtime/frontend/patterns/shared-state.md
+              - In-app Actions: runtime/frontend/patterns/in-app-actions.md
+              - Human-in-the-loop: runtime/frontend/patterns/human-in-the-loop.md
       - Ambient Agents: runtime/ambient-agents.md
       - Resume Agents: runtime/resume.md
       - Cancel Agent Runs: runtime/cancel.md
